@@ -42,5 +42,7 @@ Web API 通常使用 JSON 或 XML 作为数据交换格式。
 
 
 开始完成一个restAPI project
+Create a New Spring Starter Project
+select dependencies
 首先定义一个bean
 application.properties连接到database
