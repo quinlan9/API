@@ -129,3 +129,25 @@ public class MockPaymentServiceImpl implements PaymentService {
 ```
 
 4.创建controller
+注解:
+@RestController: 表明这个类是一个REST控制器。这意味着此类中的方法会返回直接写入HTTP响应体的数据，而不是返回视图名。
+
+依赖注入:
+@Autowired: 这是Spring的依赖注入注解，它告诉Spring自动将一个 LessonService 类型的bean注入到 lessonService 字段中。
+
+API端点:
+@GetMapping("/instructors/{username}/lessons"): 定义一个HTTP GET请求的处理器，用于获取给定用户名的所有课程。
+@GetMapping("/instructors/{username}/lessons/{id}"): 定义一个HTTP GET请求的处理器，用于获取给定用户名和课程ID的特定课程。
+@DeleteMapping("/instructors/{username}/lessons/{id}"): 定义一个HTTP DELETE请求的处理器，用于删除给定用户名和课程ID的课程。
+@PutMapping("/instructors/{username}/lessons/{id}"): 定义一个HTTP PUT请求的处理器，用于更新给定用户名和课程ID的课程。
+@PostMapping("/instructors/{username}/lessons"): 定义一个HTTP POST请求的处理器，用于为给定用户名创建新课程。
+
+参数注解:
+@PathVariable: 从URI路径中提取变量的值。
+@RequestBody: 表示请求体将通过HTTP消息转换器绑定到方法参数上。这通常用于POST和PUT请求，其中请求体包含您想要添加或更新的数据。
+
+业务逻辑:
+所有的API端点方法都调用了 lessonService 来执行实际的业务逻辑。这提供了一个明确的分层结构，使控制器只负责HTTP请求和响应，而服务层负责实际的业务逻辑。
+
+响应生成:
+在创建和更新操作后，控制器使用 ResponseEntity 来构建HTTP响应。例如，在创建课程后，控制器返回一个201 Created状态，并在Location头中包含新创建的课程的URI。
