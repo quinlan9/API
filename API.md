@@ -77,11 +77,55 @@ Tested the RESTful endpoints to ensure they are working as expected.测试RESTfu
 detail:
 
 1.首先创建一个model:  Lesson类
-数据结构: Lesson模型定义了你在应用程序中如何表示“课程”。它确定了课程有哪些属性，例如ID、用户名和描述。
-数据库映射: 通过使用JPA（Java Persistence API）注解，如@Entity、@Id等，Lesson模型还定义了如何将这些属性映射到数据库表中的列。
-数据交互: 当你的应用程序与数据库进行交互时（例如，保存、查询、更新或删除课程），它将使用这个模型。这意味着当你从数据库查询课程时，结果将被映射到Lesson对象列表；同样，当你保存课程时，一个Lesson对象将被映射并保存到数据库中。
-数据验证: 你可以在Lesson模型上添加验证规则，确保在保存到数据库之前，数据符合预期的格式或标准。
-业务逻辑: 你可以在Lesson模型内部或相关的服务类中添加与课程相关的业务逻辑。
-总的来说，Lesson模型是你项目中的核心组成部分，它为你的应用程序提供了一个清晰、组织良好的方式来表示、存储和操作“课程”。模型是MVC（模型-视图-控制器）设计模式中的“模型”部分，它定义了应用程序的数据结构和业务逻辑。
+  数据结构: Lesson模型定义了你在应用程序中如何表示“课程”。它确定了课程有哪些属性，例如ID、用户名和描述。
+  数据库映射: 通过使用JPA（Java Persistence API）注解，如@Entity、@Id等，Lesson模型还定义了如何将这些属性映射到数据库表中的列。
+  数据交互: 当你的应用程序与数据库进行交互时（例如，保存、查询、更新或删除课程），它将使用这个模型。这意味着当你从数据库查询课程时，结果将被映射到Lesson对象列表；同样，当你保存课程时，一个Lesson对象将被映射并保存到数据库中。
+  数据验证: 你可以在Lesson模型上添加验证规则，确保在保存到数据库之前，数据符合预期的格式或标准。
+  业务逻辑: 你可以在Lesson模型内部或相关的服务类中添加与课程相关的业务逻辑。
+  总的来说，Lesson模型是你项目中的核心组成部分，它为你的应用程序提供了一个清晰、组织良好的方式来表示、存储和操作“课程”。模型是MVC（模型-视图-控制器）设计模式中的“模型”部分，它定义了应用程序的数据结构和业务逻辑。
 
-2.
+2.创建repository 
+  数据访问抽象：Repository为你的应用提供了一个抽象层，使你可以访问持久化数据源（例如数据库）而无需在业务逻辑中直接使用JPA或SQL语句。这使得代码更加整洁，并且更容易维护。
+  CRUD操作：通过继承JpaRepository或其他Spring Data提供的接口，你的Repository会自动获得一系列标准的CRUD操作（如保存、查找、删除等）。这意味着你不需要手动编写这些常见操作的代码。
+  查询方法：Spring Data允许你在Repository接口中定义方法，这些方法将自动转换为数据库查询。例如，在你的项目中，你有一个findByUsername方法，Spring Data会自动为你生成相应的查询来根据用户名查找课程。
+
+3.创建service  
+  在此project中, 创建了LessonService.java和LessonServiceImpl.java. 前者为接口,后者为实现类.  
+  让我们用一个简化的“支付服务”为例来解释为什么要分开接口和实现。  
+  假设你正在开发一个电子商务应用，你需要一个服务来处理支付。你可能首先定义一个接口：  
+```java
+public interface PaymentService {
+    boolean processPayment(PaymentDetails details);
+}
+```
+现在，你的应用最初可能只支持使用信用卡支付，所以你创建了一个实现：  
+```java
+public class CreditCardPaymentServiceImpl implements PaymentService {
+    @Override
+    public boolean processPayment(PaymentDetails details) {
+        // 实现信用卡支付逻辑
+    }
+}
+```
+几个月后，你决定增加PayPal作为另一种支付方式。因为你已经有了一个定义明确的接口，所以你可以轻松地添加另一个实现，而不必更改现有代码：
+```java
+public class PayPalPaymentServiceImpl implements PaymentService {
+    @Override
+    public boolean processPayment(PaymentDetails details) {
+        // 实现PayPal支付逻辑
+    }
+}
+```
+由于你的其他代码（例如，结账流程）都是基于PaymentService接口编写的，所以当用户选择不同的支付方式时，你可以简单地切换使用哪个服务实现，而无需更改或重写其他部分的代码。
+
+此外，如果你想在测试环境中模拟支付，你可以创建一个模拟的支付服务实现，该实现总是返回成功（或失败），而不实际处理任何支付：
+```java
+public class MockPaymentServiceImpl implements PaymentService {
+    @Override
+    public boolean processPayment(PaymentDetails details) {
+        return true; // 总是成功
+    }
+}
+```
+
+4.创建controller
