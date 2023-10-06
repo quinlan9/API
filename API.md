@@ -45,7 +45,7 @@ Web API 通常使用 JSON 或 XML 作为数据交换格式。
 Create a New Spring Starter Project
 select dependencies
 
-1. Model Creation:  
+1.Model Creation:  
 Created an entity class named Lesson with attributes ID, username, and description.创建了一个名为Lesson的实体类，它有ID、用户名和描述作为属性。  
 Used JPA annotations to mark this class so Hibernate can map it to a database table.使用JPA注解来标记该类，以便Hibernate可以将其映射到数据库表。  
   
